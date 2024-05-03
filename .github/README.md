@@ -21,9 +21,9 @@ Book Management:
 ✅	Display all books available in the library.
 
 Member Management:
-	Add a new member to the library.
-	Remove a member from the library.
-	Display all library members.
+✅	Add a new member to the library.
+✅	Remove a member from the library.
+✅	Display all library members.
 
 Borrowing System:
 	Allow members to borrow books.
