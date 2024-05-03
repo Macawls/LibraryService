@@ -1,0 +1,18 @@
+﻿[
+  {
+    "id": 1,
+    "first_name": "Josh",
+    "email": "josh@macawls.dev",
+    "phone_number": "0611153166",
+    "created_at": "2024-05-03 05:06:08.725256+00",
+    "last_name": "Macawls"
+  },
+  {
+    "id": 2,
+    "first_name": "John",
+    "email": "johndoe123@gmai.com",
+    "phone_number": "0624568934",
+    "created_at": "2024-05-03 05:16:37.411926+00",
+    "last_name": "Doe"
+  }
+]

@@ -1,0 +1,14 @@
+﻿[
+  {
+    "id": 1,
+    "name": "Fantasy"
+  },
+  {
+    "id": 2,
+    "name": "Adventure"
+  },
+  {
+    "id": 3,
+    "name": "Mystery"
+  }
+]
