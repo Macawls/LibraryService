@@ -10,4 +10,12 @@ public static class GenreQueries
             .Where(genre => namesToCompare.Select(e => e.ToLower())
             .Contains(genre.Name.ToLower()));
     }
+    
+    public static IEnumerable<Genre> GetGenresOfBook(int id, IEnumerable<Genre> genres, IEnumerable<BookGenre> bookGenres)
+    {
+        return from bookGenre in bookGenres
+            join genre in genres on bookGenre.GenreId equals genre.Id
+            where bookGenre.BookId == id
+            select genre;
+    }
 }

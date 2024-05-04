@@ -20,14 +20,6 @@ public static class BookQueries
             .ToList();
     }
     
-    public static IEnumerable<Genre> GetGenresOfBook(int id, IEnumerable<Genre> genres, IEnumerable<BookGenre> bookGenres)
-    {
-        return from bookGenre in bookGenres
-            join genre in genres on bookGenre.GenreId equals genre.Id
-            where bookGenre.BookId == id
-            select genre;
-    }
-    
     public static IEnumerable<Book> FuzzySearchByTitleOrAuthor(IEnumerable<Book> books, string query, int minScore = 50)
     {
         return from book in books 
