@@ -2,7 +2,7 @@
 
 namespace LibraryService.Repositories;
 
-public class InMemoryMemberRepositoryBase(string filePath) : InMemoryRepositoryBase<Member>(filePath)
+public class InMemoryMemberRepository(string filePath) : InMemoryRepositoryBase<Member>(filePath)
 {
     public override Task Update(Member item)
     {

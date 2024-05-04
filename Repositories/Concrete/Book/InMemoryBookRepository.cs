@@ -2,9 +2,8 @@
 
 namespace LibraryService.Repositories;
 
-public class InMemoryBookRepositoryBase(string filePath) : InMemoryRepositoryBase<Book>(filePath)
+public class InMemoryBookRepository(string filePath) : InMemoryRepositoryBase<Book>(filePath)
 {
-    
     public override Task Update(Book item)
     {
         ArgumentNullException.ThrowIfNull(item);

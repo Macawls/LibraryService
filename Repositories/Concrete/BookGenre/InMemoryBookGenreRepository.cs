@@ -2,7 +2,7 @@
 
 namespace LibraryService.Repositories;
 
-public class InMemoryBookGenreRepositoryBase(string filePath) : InMemoryRepositoryBase<BookGenre>(filePath)
+public class InMemoryBookGenreRepository(string filePath) : InMemoryRepositoryBase<BookGenre>(filePath)
 {
     public override Task Update(BookGenre item)
     {
