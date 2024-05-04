@@ -20,11 +20,11 @@ public static class BookQueries
             .ToList();
     }
     
-    public static IEnumerable<Genre> GetGenresOfBook(Book book, IEnumerable<Genre> genres, IEnumerable<BookGenre> bookGenres)
+    public static IEnumerable<Genre> GetGenresOfBook(int id, IEnumerable<Genre> genres, IEnumerable<BookGenre> bookGenres)
     {
         return from bookGenre in bookGenres
             join genre in genres on bookGenre.GenreId equals genre.Id
-            where bookGenre.BookId == book.Id
+            where bookGenre.BookId == id
             select genre;
     }
     
