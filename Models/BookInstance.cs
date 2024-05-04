@@ -9,9 +9,9 @@ namespace LibraryService.Models;
 
 public enum BookStatusType { Available, InUse, Lost }
 
-[Table("book_status")]
+[Table("book_instance")]
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-public class BookStatus : BaseModel
+public class BookInstance : BaseModel
 {
     [SwaggerSchema(ReadOnly = true)]
     [PrimaryKey("id")]
@@ -25,4 +25,12 @@ public class BookStatus : BaseModel
     [JsonProperty("book_status_type")]
     [JsonConverter(typeof(StringEnumConverter))]
     public BookStatusType StatusType { get; set; }
+
+    public static BookInstance Create(int bookId)
+    {
+        return new BookInstance
+        {
+            BookId = bookId
+        };
+    }
 }
