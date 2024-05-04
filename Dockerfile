@@ -11,13 +11,6 @@ COPY ["LibraryService.csproj", "./"]
 RUN dotnet restore "LibraryService.csproj"
 COPY . .
 WORKDIR "/src/"
-RUN dotnet build "LibraryService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "LibraryService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "LibraryService.dll"]
+RUN dotnet tool restore
+RUN dotnet build "LibraryService.csproj" -c $BUILD_CONFIGURATION
