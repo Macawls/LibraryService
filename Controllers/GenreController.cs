@@ -1,5 +1,4 @@
-﻿using System.Net;
-using LibraryService.Models;
+﻿using LibraryService.Models;
 using LibraryService.Repositories;
 using LibraryService.Rules;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,7 @@ namespace LibraryService.Controllers;
 
 [ApiController]
 [Route("api/genres")]
+[Produces("application/json")]
 public class GenreController(
     IRepository<Genre> genreRepository, 
     ILogger<GenreController> logger) : ControllerBase
@@ -56,10 +56,7 @@ public class GenreController(
         
         if (!GenreRules.IsUniqueName(genre, genres))
         {
-            return Conflict(new
-            {
-                message = "Genre name already exists"
-            });
+            return Conflict(new { message = "Genre name already exists" });
         }
         
         var newGenre = await genreRepository.Add(genre);

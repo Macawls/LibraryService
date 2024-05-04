@@ -1,18 +1,19 @@
-﻿using System.Net.Mime;
-using LibraryService.Queries;
+﻿using LibraryService.Queries;
 using LibraryService.Models;
 using LibraryService.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace LibraryService.Controllers;
 
 [ApiController]
 [Route("api/books")]
-[Produces(MediaTypeNames.Application.Json)]
+[Produces("application/json")]
 public class BookController(
     IRepository<Book> bookRepository,
     IRepository<Genre> genreRepository,
     IRepository<BookGenre> bookGenreRepository,
+    IRepository<BookInstance> bookInstanceRepository,
     ILogger<BookController> logger) : ControllerBase
 {
     /// <summary>
@@ -89,25 +90,63 @@ public class BookController(
         var bookGenres = await bookGenreRepository.GetAll();
 
 
-        var genresOfBook = BookQueries.GetGenresOfBook(book, genres, bookGenres);
+        var genresOfBook = BookQueries.GetGenresOfBook(book.Id, genres, bookGenres);
 
         return Ok(genresOfBook);
     }
     
     /// <summary>
+    /// Retrieve the instances of the book by ID
+    /// </summary>
+    [HttpGet("{id:int}/instances")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<BookInstance>>> GetInstances(int id)
+    {
+        var book = await bookRepository.GetById(id);
+
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        var bookInstances = await bookInstanceRepository.GetAll();
+        
+        var instances = BookInstanceQueries.GetInstancesOfBook(book.Id, bookInstances);
+
+        return Ok(instances);
+    }
+    
+    /// <summary>
     /// Add a book
     /// </summary>
+    /// <param name="amountOfCopies" example="2" >The amount of copies to add</param>
+    /// <param name="genres" example="2" >The genres of the book added</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Book>> Add(Book? book)
+    public async Task<ActionResult<IEnumerable<int>>> Add(Book? book,
+        [FromQuery(Name = "amount")] int? amountOfCopies = 1,
+        [FromQuery, BindRequired] params string[] genres)
     {
         if (book == null)
         {
             return BadRequest(book);
         }
+
+        if (amountOfCopies < 0)
+        {
+            return BadRequest(new { message = "amount of copies cannot be negative" });
+        }
         
         var newBook = await bookRepository.Add(book);
+
+        for (var i = 0; i < amountOfCopies; i++)
+        {
+            var instance = BookInstance.Create(newBook.Id);
+            await bookInstanceRepository.Add(instance);
+        }
+        
         return CreatedAtAction(nameof(Get), new { id = newBook.Id }, newBook);
     }
     
@@ -126,7 +165,17 @@ public class BookController(
             return NotFound();
         }
 
+        var bookInstances = await bookInstanceRepository.GetAll();
+        
+        var instancesToDelete = new List<BookInstance>(BookInstanceQueries.GetInstancesOfBook(bookToDelete.Id, bookInstances));
+        
+        foreach (var bookInstance in instancesToDelete)
+        {
+            await bookInstanceRepository.Delete(bookInstance.Id);
+        }
+        
         await bookRepository.Delete(bookToDelete.Id);
+        
         return NoContent();
     }
 }
