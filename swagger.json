@@ -75,6 +75,32 @@
           "Book"
         ],
         "summary": "Add a book",
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "query",
+            "description": "The amount of copies to add",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            },
+            "example": 2
+          },
+          {
+            "name": "genres",
+            "in": "query",
+            "description": "The genres of the book added",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": 2
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json-patch+json": {
@@ -105,7 +131,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Book"
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
                 }
               }
             }
@@ -240,6 +270,50 @@
         }
       }
     },
+    "/api/books/{id}/instances": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Retrieve the instances of the book by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BookInstance"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/genres": {
       "get": {
         "tags": [
@@ -250,23 +324,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Genre"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Genre"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -311,17 +369,7 @@
           "201": {
             "description": "Created",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Genre"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Genre"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Genre"
                 }
@@ -331,17 +379,7 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -351,17 +389,7 @@
           "409": {
             "description": "Conflict",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -392,17 +420,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Genre"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Genre"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Genre"
                 }
@@ -412,17 +430,7 @@
           "404": {
             "description": "Not Found",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -454,17 +462,7 @@
           "404": {
             "description": "Not Found",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -688,6 +686,32 @@
         },
         "additionalProperties": false,
         "description": "Represents a book"
+      },
+      "BookInstance": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "book_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "book_status_type": {
+            "$ref": "#/components/schemas/BookStatusType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BookStatusType": {
+        "enum": [
+          "Available",
+          "InUse",
+          "Lost"
+        ],
+        "type": "string"
       },
       "Genre": {
         "required": [
