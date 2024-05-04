@@ -50,6 +50,7 @@ namespace LibraryService.Controllers
             {
                 return BadRequest();
             }
+            
             var newMember = await memberRepository.Add(member);
             return CreatedAtAction(nameof(Get), new { id = newMember.Id }, newMember);
         }

@@ -6,8 +6,8 @@ namespace LibraryService.Repositories;
 
 public abstract class InMemoryRepositoryBase<T> : IRepository<T> where T : BaseModel
 {
-    protected List<T> Items;
-    protected string DefaultDateTimePropertyName => "CreatedAt";
+    protected string DefaultCreatedAtPropertyName => "CreatedAt";
+    protected readonly List<T?> Items;
 
     protected InMemoryRepositoryBase(string filePath)
     {
@@ -42,7 +42,7 @@ public abstract class InMemoryRepositoryBase<T> : IRepository<T> where T : BaseM
 
     public Task<T> Add(T value)
     {
-        value.SetBaseModelMetadata<T>(id: GenerateUniqueId(), DefaultDateTimePropertyName);
+        value.SetBaseModelMetadata<T>(id: GenerateUniqueId(), DefaultCreatedAtPropertyName);
         Items.Add(value);
         
         return Task.FromResult(value);

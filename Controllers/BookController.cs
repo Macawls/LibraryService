@@ -1,5 +1,5 @@
 ﻿using System.Net.Mime;
-using LibraryService.Configuration.UseCases;
+using LibraryService.Queries;
 using LibraryService.Models;
 using LibraryService.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -37,22 +37,22 @@ public class BookController(
             var genres = await genreRepository.GetAll();
             var bookGenres = await bookGenreRepository.GetAll();
 
-            books = BookUseCases.GetBooksByGenre(genreFilter, books, genres, bookGenres);
+            books = BookQueries.GetBooksByGenre(genreFilter, books, genres, bookGenres);
         }
 
         if (publishedBefore.HasValue)
         {
-            books = BookUseCases.PublishedBefore(books, publishedBefore.Value);
+            books = BookQueries.PublishedBefore(books, publishedBefore.Value);
         }
 
         if (publishedAfter.HasValue)
         {
-            books = BookUseCases.PublishedAfter(books, publishedAfter.Value);
+            books = BookQueries.PublishedAfter(books, publishedAfter.Value);
         }
 
         if (!string.IsNullOrEmpty(titleOrAuthorQuery))
         {
-            books = BookUseCases.FuzzySearchByTitleOrAuthor(books, titleOrAuthorQuery);
+            books = BookQueries.FuzzySearchByTitleOrAuthor(books, titleOrAuthorQuery);
         }
 
         return Ok(books);
@@ -76,7 +76,7 @@ public class BookController(
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Book>> Add(Book book)
+    public async Task<ActionResult<Book>> Add(Book? book)
     {
         if (book == null)
         {

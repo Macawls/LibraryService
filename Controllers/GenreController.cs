@@ -1,5 +1,7 @@
-﻿using LibraryService.Models;
+﻿using System.Net;
+using LibraryService.Models;
 using LibraryService.Repositories;
+using LibraryService.Rules;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryService.Controllers;
@@ -17,7 +19,7 @@ public class GenreController(
     public async Task<ActionResult<IEnumerable<Genre>>> Get()
     {
         var genres = await genreRepository.GetAll();
-        return new ActionResult<IEnumerable<Genre>>(genres);
+        return Ok(genres);
     }
     
     /// <summary>
@@ -26,7 +28,7 @@ public class GenreController(
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Member>> Get(int id)
+    public async Task<ActionResult<Genre>> Get(int id)
     {
         var genre = await genreRepository.GetById(id);
         if (genre == null)
@@ -42,13 +44,46 @@ public class GenreController(
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Member>> Add(Genre genre)
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<Genre>> Add(Genre genre)
     {
         if (genre == null)
         {
             return BadRequest();
         }
+
+        var genres = await genreRepository.GetAll();
+        
+        if (!GenreRules.IsUniqueName(genre, genres))
+        {
+            return Conflict(new
+            {
+                message = "Genre name already exists"
+            });
+        }
+        
         var newGenre = await genreRepository.Add(genre);
-        return CreatedAtAction(nameof(Get), new { id = newGenre.Id }, newGenre);
+        
+        return CreatedAtAction(nameof(Get), new { id = newGenre!.Id }, newGenre);
+    }
+    
+    /// <summary>
+    /// Delete a genre by ID
+    /// </summary>
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> DeleteGenre(int id)
+    {
+        var genreToDelete = await genreRepository.GetById(id);
+        
+        if (genreToDelete == null)
+        {
+            return NotFound();
+        }
+        
+        await genreRepository.Delete(genreToDelete.Id);
+        
+        return NoContent();
     }
 }

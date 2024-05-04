@@ -1,14 +1,14 @@
 ﻿[
   {
     "id": 1,
-    "name": "Fantasy"
+    "name": "fantasy"
   },
   {
     "id": 2,
-    "name": "Adventure"
+    "name": "adventure"
   },
   {
     "id": 3,
-    "name": "Mystery"
+    "name": "mystery"
   }
 ]

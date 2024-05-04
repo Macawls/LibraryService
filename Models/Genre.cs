@@ -20,7 +20,7 @@ public class Genre : BaseModel
     /// <summary>
     /// The name of the genre
     /// </summary>
-    /// <example>Fiction</example>
+    /// <example>fiction</example>
     [Column("name")]
     public string Name { get; set; }
 }
