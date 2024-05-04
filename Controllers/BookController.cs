@@ -90,7 +90,7 @@ public class BookController(
         var bookGenres = await bookGenreRepository.GetAll();
 
 
-        var genresOfBook = BookQueries.GetGenresOfBook(book.Id, genres, bookGenres);
+        var genresOfBook = GenreQueries.GetGenresOfBook(book.Id, genres, bookGenres);
 
         return Ok(genresOfBook);
     }
