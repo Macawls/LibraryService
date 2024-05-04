@@ -1,3 +1,13 @@
+<center>
+
+
+[![Deploy API Docs](https://github.com/Macawls/LibraryService/actions/workflows/api-to-pages.yml/badge.svg)](https://github.com/Macawls/LibraryService/actions/workflows/api-to-pages.yml)
+
+[![pages-build-deployment](https://github.com/Macawls/LibraryService/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Macawls/LibraryService/actions/workflows/pages/pages-build-deployment)
+
+</center>
+
+
 ### Intro
 
 Some practice creating apis in .NET 8 👍
