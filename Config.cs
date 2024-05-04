@@ -31,7 +31,7 @@ public static class Config
             .AddSingleton<IRepository<Genre>>(new InMemoryGenreRepository("data.genre.json"))
             .AddSingleton<IRepository<BookGenre>>(new InMemoryBookGenreRepository("data.book_genre.json"))
             .AddSingleton<IRepository<Member>>(new InMemoryMemberRepository("data.member.json"))
-            .AddSingleton<IRepository<BookInstance>>(new InMemoryBookInstanceRepository("data.book_status.json"))
+            .AddSingleton<IRepository<BookInstance>>(new InMemoryBookInstanceRepository("data.book_instance.json"))
             .AddEndpointsApiExplorer()
             .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssemblyContaining<Program>()

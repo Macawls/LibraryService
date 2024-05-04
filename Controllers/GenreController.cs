@@ -1,6 +1,6 @@
 ﻿using LibraryService.Models;
+using LibraryService.Queries;
 using LibraryService.Repositories;
-using LibraryService.Rules;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryService.Controllers;
@@ -53,15 +53,17 @@ public class GenreController(
         }
 
         var genres = await genreRepository.GetAll();
-        
-        if (!GenreRules.IsUniqueName(genre, genres))
+
+        var valid = GenreQueries.GetValidGenres(genres, new[] { genre.Name });
+
+        if (valid.Any())
         {
             return Conflict(new { message = "Genre name already exists" });
         }
         
         var newGenre = await genreRepository.Add(genre);
         
-        return CreatedAtAction(nameof(Get), new { id = newGenre!.Id }, newGenre);
+        return CreatedAtAction(nameof(Get), new { id = newGenre.Id }, newGenre);
     }
     
     /// <summary>

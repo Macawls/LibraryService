@@ -17,6 +17,10 @@ public class BookInstance : BaseModel
     [PrimaryKey("id")]
     public int Id { get; set; }
     
+    [Column("created_at")]
+    [SwaggerSchema(ReadOnly = true)]
+    public DateTime CreatedAt { get; set; }
+    
     [Column("book_id")]
     [JsonProperty("book_id")]
     public int BookId { get; set; }

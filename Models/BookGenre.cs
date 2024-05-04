@@ -19,4 +19,13 @@ public class BookGenre : BaseModel
     [Column("genre_id")]
     [JsonProperty("genre_id")]
     public int GenreId { get; set; }
+    
+    public static BookGenre Create(int bookId, int genreId)
+    {
+        return new BookGenre
+        {
+            BookId = bookId,
+            GenreId = genreId
+        };
+    }
 }

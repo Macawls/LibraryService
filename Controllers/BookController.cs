@@ -121,13 +121,16 @@ public class BookController(
     /// Add a book
     /// </summary>
     /// <param name="amountOfCopies" example="2" >The amount of copies to add</param>
-    /// <param name="genres" example="2" >The genres of the book added</param>
+    /// <param name="genreNames" example="Thriller,Mystery">
+    /// The genres to be set for the book.
+    /// If there is no matches for the genre, it is ignored.
+    /// </param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<int>>> Add(Book? book,
         [FromQuery(Name = "amount")] int? amountOfCopies = 1,
-        [FromQuery, BindRequired] params string[] genres)
+        [FromQuery, BindRequired] params string[] genreNames)
     {
         if (book == null)
         {
@@ -136,11 +139,24 @@ public class BookController(
 
         if (amountOfCopies < 0)
         {
-            return BadRequest(new { message = "amount of copies cannot be negative" });
+            return BadRequest(new { message = "Amount of copies cannot be negative" });
+        }
+
+        if (genreNames.Length == 0)
+        {
+            return BadRequest(new { message = "Genres cannot be omitted when adding a book" });
         }
         
         var newBook = await bookRepository.Add(book);
 
+        var genres = await genreRepository.GetAll();
+        var validGenres = new List<Genre>(GenreQueries.GetValidGenres(genres, genreNames));
+        
+        foreach (var genre in validGenres)
+        {
+            await bookGenreRepository.Add(BookGenre.Create(book.Id, genre.Id));
+        }
+        
         for (var i = 0; i < amountOfCopies; i++)
         {
             var instance = BookInstance.Create(newBook.Id);
@@ -151,7 +167,7 @@ public class BookController(
     }
     
     /// <summary>
-    /// Delete a book by ID
+    /// Delete a book by ID, also deletes all instances of the book.
     /// </summary>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
