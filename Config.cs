@@ -26,10 +26,11 @@ public static class Config
 
         builder.Services
             .AddSingleton(_ => new Client(url, key, options))
-            .AddSingleton<IRepository<Book>>(new InMemoryBookRepositoryBase("data.book.json"))
-            .AddSingleton<IRepository<Genre>>(new InMemoryGenreRepositoryBase("data.genre.json"))
-            .AddSingleton<IRepository<BookGenre>>(new InMemoryBookGenreRepositoryBase("data.book_genre.json"))
-            .AddSingleton<IRepository<Member>>(new InMemoryMemberRepositoryBase("data.member.json"))
+            .AddSingleton<IRepository<Book>>(new InMemoryBookRepository("data.book.json"))
+            .AddSingleton<IRepository<Genre>>(new InMemoryGenreRepository("data.genre.json"))
+            .AddSingleton<IRepository<BookGenre>>(new InMemoryBookGenreRepository("data.book_genre.json"))
+            .AddSingleton<IRepository<Member>>(new InMemoryMemberRepository("data.member.json"))
+            .AddSingleton<IRepository<BookStatus>>(new InMemoryBookStatusRepository("data.book_status.json"))
             .AddEndpointsApiExplorer()
             .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssemblyContaining<Program>()
