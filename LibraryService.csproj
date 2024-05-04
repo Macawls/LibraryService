@@ -25,7 +25,7 @@
     <!-- Generate swagger.json after build -->
     <!-- https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2707#issuecomment-1849853192 -->
     <Target Name="Generate Swagger Json" AfterTargets="Build">
-        <Exec Command="dotnet swagger tofile --output swagger.json $(TargetPath) v1" EnvironmentVariables="DOTNET_ROLL_FORWARD=LatestMajor" />
+        <Exec Command="dotnet swagger tofile --output swagger.json $(MSBuildProjectDirectory)/$(OutputPath)$(AssemblyName).dll v1" EnvironmentVariables="DOTNET_ROLL_FORWARD=LatestMajor" />
     </Target>
 
 </Project>

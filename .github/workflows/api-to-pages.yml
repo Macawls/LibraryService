@@ -22,7 +22,7 @@ jobs:
       # See post build step in .csproj
       - name: Build dll
         run: | 
-          dotnet build ${{ env.projectName }}.csproj -t:rebuild -verbosity:detailed -property:Configuration=Release
+          dotnet build ${{ env.projectName }}.csproj -t:rebuild -verbosity:normal -property:Configuration=Release
 
       - name: Upload swagger.json
         uses: actions/upload-artifact@v4
