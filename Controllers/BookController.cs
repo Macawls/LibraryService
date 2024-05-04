@@ -67,7 +67,31 @@ public class BookController(
     public async Task<ActionResult<Book>> Get(int id)
     {
         var book = await bookRepository.GetById(id);
-        return book == null ? NotFound() : new ActionResult<Book>(book);
+        return book == null ? NotFound() : Ok(book);
+    }
+    
+    /// <summary>
+    /// Retrieve the genres of the book by ID
+    /// </summary>
+    [HttpGet("{id:int}/genres")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<Genre>>> GetGenres(int id)
+    {
+        var book = await bookRepository.GetById(id);
+
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        var genres = await genreRepository.GetAll();
+        var bookGenres = await bookGenreRepository.GetAll();
+
+
+        var genresOfBook = BookQueries.GetGenresOfBook(book, genres, bookGenres);
+
+        return Ok(genresOfBook);
     }
     
     /// <summary>

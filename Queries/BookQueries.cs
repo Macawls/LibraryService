@@ -20,14 +20,12 @@ public static class BookQueries
             .ToList();
     }
     
-    public static IEnumerable<Genre> GetBookGenres(IEnumerable<Book> books, IEnumerable<Genre> genres, IEnumerable<BookGenre> bookGenres)
+    public static IEnumerable<Genre> GetGenresOfBook(Book book, IEnumerable<Genre> genres, IEnumerable<BookGenre> bookGenres)
     {
-        var bookGenreIds = books
-            .SelectMany(book => bookGenres.Where(bg => bg.BookId == book.Id)
-                .Select(bg => bg.GenreId))
-            .Distinct();
-        
-        return genres.Where(genre => bookGenreIds.Contains(genre.Id));
+        return from bookGenre in bookGenres
+            join genre in genres on bookGenre.GenreId equals genre.Id
+            where bookGenre.BookId == book.Id
+            select genre;
     }
     
     public static IEnumerable<Book> FuzzySearchByTitleOrAuthor(IEnumerable<Book> books, string query, int minScore = 50)
