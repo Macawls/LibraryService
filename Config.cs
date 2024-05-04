@@ -5,6 +5,7 @@ using LibraryService.Models;
 using LibraryService.Repositories;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using Supabase;
 
 namespace LibraryService.Configuration;
@@ -30,18 +31,18 @@ public static class Config
             .AddSingleton<IRepository<Genre>>(new InMemoryGenreRepository("data.genre.json"))
             .AddSingleton<IRepository<BookGenre>>(new InMemoryBookGenreRepository("data.book_genre.json"))
             .AddSingleton<IRepository<Member>>(new InMemoryMemberRepository("data.member.json"))
-            .AddSingleton<IRepository<BookStatus>>(new InMemoryBookStatusRepository("data.book_status.json"))
+            .AddSingleton<IRepository<BookInstance>>(new InMemoryBookInstanceRepository("data.book_status.json"))
             .AddEndpointsApiExplorer()
             .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssemblyContaining<Program>()
             .AddFluentValidationClientsideAdapters()
-            .AddSwaggerGen(options =>
+            .AddSwaggerGen(swaggerGenOptions =>
             {
-                options.EnableAnnotations();
+                swaggerGenOptions.EnableAnnotations();
                 
                 const string title = "LibraryService";
 
-                options.SwaggerDoc("v1", new OpenApiInfo
+                swaggerGenOptions.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = title,
                     Description = "A library management system",
@@ -49,12 +50,14 @@ public static class Config
                 });
 
                 var filePath = Path.Combine(AppContext.BaseDirectory, $"{title}.xml");
-                options.IncludeXmlComments(filePath);
+                swaggerGenOptions.IncludeXmlComments(filePath);
             })
-            .AddSwaggerGenNewtonsoftSupport()
             .AddFluentValidationRulesToSwagger()
             .AddControllers()
-            .AddNewtonsoftJson();
+            .AddNewtonsoftJson(jsonOptions => jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter()));
+        
+        // must be called after "AddNewtonsoftJson" according to https://stackoverflow.com/a/55541764
+        builder.Services.AddSwaggerGenNewtonsoftSupport();
     }
     
     public static void RegisterMiddlewares(this WebApplication app)
