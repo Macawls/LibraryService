@@ -88,17 +88,16 @@
             "example": 2
           },
           {
-            "name": "genres",
+            "name": "genreNames",
             "in": "query",
-            "description": "The genres of the book added",
+            "description": "The genres to be set for the book.\r\nIf there is no matches for the genre, it is ignored.",
             "required": true,
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
               }
-            },
-            "example": 2
+            }
           }
         ],
         "requestBody": {
@@ -197,7 +196,7 @@
         "tags": [
           "Book"
         ],
-        "summary": "Delete a book by ID",
+        "summary": "Delete a book by ID, also deletes all instances of the book.",
         "parameters": [
           {
             "name": "id",
@@ -693,6 +692,11 @@
           "id": {
             "type": "integer",
             "format": "int32",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
             "readOnly": true
           },
           "book_id": {
