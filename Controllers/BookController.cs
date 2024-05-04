@@ -24,7 +24,7 @@ public class BookController(
     /// <param name="titleOrAuthorQuery" example="Harry">A fuzzy search query to filter books by title or author</param>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Book>>> Get(
+    public async Task<ActionResult<IEnumerable<Book>>> GetAll(
         [FromQuery(Name = "fuzzySearch")] string? titleOrAuthorQuery,
         [FromQuery(Name = "publishedBefore")] int? publishedBefore,
         [FromQuery(Name = "publishedAfter")] int? publishedAfter,
