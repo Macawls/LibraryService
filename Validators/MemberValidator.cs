@@ -17,11 +17,11 @@ public class MemberValidator : AbstractValidator<Member>
             .MaximumLength(50).WithMessage("Last Name must not exceed 20 characters.");
         
         RuleFor(member => member.Email)
-            .NotEmpty()
+            .NotEmpty().WithMessage("Email is required.")
             .EmailAddress();
 
         RuleFor(member => member.PhoneNumber)
-            .NotEmpty()
+            .NotEmpty().WithMessage("Phone number is required.")
             .NotNull()
             .MinimumLength(10)
             .MaximumLength(20)
