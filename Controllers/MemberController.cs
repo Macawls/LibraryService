@@ -1,4 +1,5 @@
 ﻿using LibraryService.Models;
+using LibraryService.Queries;
 using LibraryService.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +15,19 @@ namespace LibraryService.Controllers
         /// <summary>
         /// Retrieve all members
         /// </summary>
+        /// <param name="nameQuery" example="John">A fuzzy search query to filter members by first or last name</param>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Member>>> GetAllMembers()
+        public async Task<ActionResult<IEnumerable<Member>>> GetAll(
+            [FromQuery(Name = "fuzzySearch")] string? nameQuery)
         {
             var members = await memberRepository.GetAll();
+
+            if (!string.IsNullOrEmpty(nameQuery))
+            {
+                members = MemberQueries.FuzzySearchByNameAndLastName(members, nameQuery);
+            }
+            
             return Ok(members);
         }
 
