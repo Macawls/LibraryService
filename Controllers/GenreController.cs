@@ -9,7 +9,8 @@ namespace LibraryService.Controllers;
 [Route("api/genres")]
 [Produces("application/json")]
 public class GenreController(
-    IRepository<Genre> genreRepository, 
+    IRepository<Genre> genreRepository,
+    IRepository<BookGenre> bookGenreRepository,
     ILogger<GenreController> logger) : ControllerBase
 {
     /// <summary>
@@ -36,7 +37,7 @@ public class GenreController(
             return NotFound();
         }
         return Ok(genre);
-    }
+    }   
     
     /// <summary>
     /// Add a genre
@@ -79,6 +80,14 @@ public class GenreController(
         if (genreToDelete == null)
         {
             return NotFound();
+        }
+        
+        var bookGenres = await bookGenreRepository.GetAll();
+        var bookGenresOfBook = new List<BookGenre>(BookGenreQueries.GetBookGenresOfBook(id, bookGenres));
+        
+        foreach (var bookGenre in bookGenresOfBook)
+        {
+            await bookGenreRepository.Delete(bookGenre.Id);
         }
         
         await genreRepository.Delete(genreToDelete.Id);
