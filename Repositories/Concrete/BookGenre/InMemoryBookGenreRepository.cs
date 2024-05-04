@@ -14,7 +14,8 @@ public class InMemoryBookGenreRepository(string filePath) : InMemoryRepositoryBa
         {
             throw new InvalidOperationException($"Genre with ID {item.Id} not found.");
         }
-        
+
+        existingGenre.GenreId = item.GenreId;
         existingGenre.BookId = item.BookId;
         return Task.CompletedTask;
     }
