@@ -19,6 +19,12 @@ jobs:
         with:
           dotnet-version: 8.0.*
 
+      - name: Install dependencies
+        run: dotnet restore
+      
+      - name: Install tools
+        run: dotnet tool restore
+
       # See post build step in .csproj
       - name: Build dll
         run: | 
