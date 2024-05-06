@@ -29,7 +29,7 @@ public class GenreController(
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Genre>> Get(int id)
+    public async Task<ActionResult<Genre>> GetById(int id)
     {
         var genre = await genreRepository.GetById(id);
         if (genre == null)
@@ -64,7 +64,7 @@ public class GenreController(
         
         var newGenre = await genreRepository.Add(genre);
         
-        return CreatedAtAction(nameof(Get), new { id = newGenre.Id }, newGenre);
+        return CreatedAtAction(nameof(GetById), new { id = newGenre.Id }, newGenre);
     }
     
     /// <summary>

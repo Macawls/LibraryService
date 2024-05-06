@@ -17,7 +17,7 @@ public class BookController(
     ILogger<BookController> logger) : ControllerBase
 {
     /// <summary>
-    /// Retrieve all books
+    /// Retrieve all books, filter by genre/s, publish period and/or a fuzzy search
     /// </summary>
     /// <param name="genreFilter" example="Fantasy">A list of genres to filter the books by, case insensitive</param>
     /// <param name="publishedAfter" example="1970">After the specified year</param>
@@ -65,7 +65,7 @@ public class BookController(
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Book>> Get(int id)
+    public async Task<ActionResult<Book>> GetById(int id)
     {
         var book = await bookRepository.GetById(id);
         return book == null ? NotFound() : Ok(book);
@@ -163,11 +163,15 @@ public class BookController(
             await bookInstanceRepository.Add(instance);
         }
         
-        return CreatedAtAction(nameof(Get), new { id = newBook.Id }, newBook);
+        return CreatedAtAction(nameof(GetById), new { id = newBook.Id }, new
+        {
+            book = newBook,
+            genres = validGenres
+        });
     }
     
     /// <summary>
-    /// Delete a book by ID, also deletes all instances of the book.
+    /// Delete a book by ID
     /// </summary>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

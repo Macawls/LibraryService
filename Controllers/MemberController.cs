@@ -37,7 +37,7 @@ public class MemberController(
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Member>> Get(int id)
+    public async Task<ActionResult<Member>> GetById(int id)
     {
         var member = await memberRepository.GetById(id);
         if (member == null)
@@ -61,7 +61,7 @@ public class MemberController(
         }
             
         var newMember = await memberRepository.Add(member);
-        return CreatedAtAction(nameof(Get), new { id = newMember.Id }, newMember);
+        return CreatedAtAction(nameof(GetById), new { id = newMember.Id }, newMember);
     }
 
     /// <summary>
