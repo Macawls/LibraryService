@@ -33,7 +33,8 @@ public class BorrowRecord : BaseModel
         return new BorrowRecord
         {
             BookInstanceId = bookInstanceId,
-            MemberId = memberId
+            MemberId = memberId,
+            DueDate = dueDate
         };
     }
 }
