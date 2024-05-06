@@ -11,7 +11,7 @@
         "tags": [
           "Book"
         ],
-        "summary": "Retrieve all books",
+        "summary": "Retrieve all books, filter by genre/s, publish period and/or a fuzzy search",
         "parameters": [
           {
             "name": "fuzzySearch",
@@ -196,7 +196,7 @@
         "tags": [
           "Book"
         ],
-        "summary": "Delete a book by ID, also deletes all instances of the book.",
+        "summary": "Delete a book by ID",
         "parameters": [
           {
             "name": "id",
@@ -647,11 +647,6 @@
             "format": "int32",
             "readOnly": true
           },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "readOnly": true
-          },
           "title": {
             "maxLength": 255,
             "minLength": 1,
@@ -681,6 +676,11 @@
             "type": "string",
             "description": "The ISBN of the book",
             "example": "9780743273565"
+          },
+          "cover_url": {
+            "type": "string",
+            "description": "The url of the cover",
+            "nullable": true
           }
         },
         "additionalProperties": false,
