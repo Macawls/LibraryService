@@ -17,10 +17,6 @@ public class Book : BaseModel
     [SwaggerSchema(ReadOnly = true)]
     public int Id { get; set; }
     
-    [Column("created_at")]
-    [SwaggerSchema(ReadOnly = true)]
-    public DateTime CreatedAt { get; set; }
-    
     /// <summary>
     /// The title of the book
     /// </summary>
@@ -48,4 +44,10 @@ public class Book : BaseModel
     /// <example>9780743273565</example>
     [Column("isbn")]
     public string ISBN { get; set; }
+    
+    /// <summary>
+    /// The url of the cover
+    /// </summary>
+    [Column("cover_url")]
+    public string CoverUrl { get; set; }
 }
